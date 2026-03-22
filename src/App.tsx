@@ -7,6 +7,7 @@ import { Station } from '@/data/stations';
 import Sidebar from '@/components/Sidebar';
 import Player from '@/components/Player';
 import MobileTopBar from '@/components/MobileTopBar';
+import MobileBottomNav from '@/components/MobileBottomNav';
 
 import HomePage from '@/pages/HomePage';
 import StationsPage from '@/pages/StationsPage';
@@ -62,11 +63,16 @@ export default function App() {
     }
   };
 
-  const playerHeight = player.currentStation ? 88 : 0;
+  const hasPlayer = !!player.currentStation;
+
+  // On mobile: bottom nav (52px) + optional player (76px) + gap
+  // On desktop: optional player only
+  const mobileBottomOffset = hasPlayer ? 76 + 52 + 8 : 52 + 8;
+  const desktopBottomOffset = hasPlayer ? 88 : 0;
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar (desktop + mobile drawer) */}
+      {/* Sidebar (desktop only) */}
       <Sidebar
         currentPage={page}
         onNavigate={setPage}
@@ -88,10 +94,12 @@ export default function App() {
           isPlaying={player.isPlaying}
         />
 
-        {/* Page content */}
+        {/* Page content
+            mobile: bottom-nav(52) + player(76) + gap = ~136px
+            desktop: player(88) + gap = ~104px (via md:pb-24 ~96px) */}
         <main
-          className="flex-1 overflow-y-auto"
-          style={{ paddingBottom: playerHeight + 16 }}
+          className="flex-1 overflow-y-auto md:pb-28"
+          style={{ paddingBottom: `${mobileBottomOffset}px` }}
         >
           {renderPage()}
         </main>
@@ -99,6 +107,14 @@ export default function App() {
 
       {/* Player */}
       <Player player={player} sidebarCollapsed={sidebarCollapsed} />
+
+      {/* Mobile bottom nav */}
+      <MobileBottomNav
+        currentPage={page}
+        onNavigate={setPage}
+        favoritesCount={favorites.length}
+        hasPlayer={hasPlayer}
+      />
     </div>
   );
 }
