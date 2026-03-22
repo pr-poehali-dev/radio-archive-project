@@ -2,12 +2,16 @@ import { useState } from 'react';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useHistory } from '@/hooks/useHistory';
+import { useAuth } from '@/hooks/useAuth';
+import { useStations } from '@/hooks/useStations';
 import { Station } from '@/data/stations';
+import { User } from '@/lib/api';
 
 import Sidebar from '@/components/Sidebar';
 import Player from '@/components/Player';
 import MobileTopBar from '@/components/MobileTopBar';
 import MobileBottomNav from '@/components/MobileBottomNav';
+import AuthModal from '@/components/AuthModal';
 
 import HomePage from '@/pages/HomePage';
 import StationsPage from '@/pages/StationsPage';
@@ -18,14 +22,19 @@ import StatsPage from '@/pages/StatsPage';
 import AboutPage from '@/pages/AboutPage';
 import ContactsPage from '@/pages/ContactsPage';
 import SupportPage from '@/pages/SupportPage';
+import ProfilePage from '@/pages/ProfilePage';
+import AdminPage from '@/pages/AdminPage';
 
-type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support';
+type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support' | 'profile' | 'admin';
 
 export default function App() {
   const [page, setPage] = useState<Page>('home');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
 
+  const auth = useAuth();
+  const { stations, reload: reloadStations } = useStations();
   const player = usePlayer();
   const { favorites, toggle: toggleFavorite } = useFavorites();
   const { history, addEntry, clearHistory } = useHistory();
@@ -35,15 +44,27 @@ export default function App() {
     addEntry(station);
   };
 
+  const handleAuthUpdate = (user: User) => {
+    auth.refresh();
+    // force re-read
+    void user;
+  };
+
   const pageProps = {
     currentStation: player.currentStation,
     isPlaying: player.isPlaying,
     favorites,
     onPlay: handlePlay,
     onToggleFavorite: toggleFavorite,
+    stations,
   };
 
   const handleNavigate = (p: string) => {
+    if (p === 'profile' && !auth.user) {
+      setAuthOpen(true);
+      return;
+    }
+    if (p === 'admin' && !auth.isAdmin) return;
     setPage(p as Page);
     setMobileMenuOpen(false);
   };
@@ -59,34 +80,41 @@ export default function App() {
       case 'about':     return <AboutPage />;
       case 'contacts':  return <ContactsPage />;
       case 'support':   return <SupportPage />;
+      case 'profile':
+        return auth.user ? (
+          <ProfilePage
+            user={auth.user}
+            onUpdate={handleAuthUpdate}
+            onLogout={async () => { await auth.logout(); setPage('home'); }}
+          />
+        ) : <HomePage {...pageProps} onNavigate={handleNavigate} />;
+      case 'admin':
+        return auth.isAdmin && auth.user ? (
+          <AdminPage currentUserId={auth.user.id} />
+        ) : <HomePage {...pageProps} onNavigate={handleNavigate} />;
       default:          return <HomePage {...pageProps} onNavigate={handleNavigate} />;
     }
   };
 
   const hasPlayer = !!player.currentStation;
-
-  // On mobile: bottom nav (52px) + optional player (76px) + gap
-  // On desktop: optional player only
   const mobileBottomOffset = hasPlayer ? 76 + 52 + 8 : 52 + 8;
-  const desktopBottomOffset = hasPlayer ? 88 : 0;
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Sidebar (desktop only) */}
       <Sidebar
         currentPage={page}
-        onNavigate={setPage}
+        onNavigate={p => handleNavigate(p)}
         favoritesCount={favorites.length}
         historyCount={history.length}
         collapsed={sidebarCollapsed}
         onToggleCollapse={() => setSidebarCollapsed(v => !v)}
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
+        user={auth.user}
+        onAuthOpen={() => setAuthOpen(true)}
       />
 
-      {/* Main area */}
       <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        {/* Mobile top bar */}
         <MobileTopBar
           currentPage={page}
           onMenuOpen={() => setMobileMenuOpen(true)}
@@ -94,9 +122,6 @@ export default function App() {
           isPlaying={player.isPlaying}
         />
 
-        {/* Page content
-            mobile: bottom-nav(52) + player(76) + gap = ~136px
-            desktop: player(88) + gap = ~104px (via md:pb-24 ~96px) */}
         <main
           className="flex-1 overflow-y-auto md:pb-28"
           style={{ paddingBottom: `${mobileBottomOffset}px` }}
@@ -105,15 +130,20 @@ export default function App() {
         </main>
       </div>
 
-      {/* Player */}
       <Player player={player} sidebarCollapsed={sidebarCollapsed} />
 
-      {/* Mobile bottom nav */}
       <MobileBottomNav
         currentPage={page}
-        onNavigate={setPage}
+        onNavigate={p => handleNavigate(p)}
         favoritesCount={favorites.length}
         hasPlayer={hasPlayer}
+      />
+
+      <AuthModal
+        open={authOpen}
+        onClose={() => setAuthOpen(false)}
+        onLogin={auth.login}
+        onRegister={auth.register}
       />
     </div>
   );

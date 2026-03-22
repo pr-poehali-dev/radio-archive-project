@@ -1,0 +1,11 @@
+{
+  "tests": [
+    {
+      "name": "Upload avatar - unauthorized",
+      "method": "POST",
+      "path": "/",
+      "body": {"file_data": "dGVzdA==", "content_type": "image/jpeg"},
+      "expectedStatus": 401
+    }
+  ]
+}

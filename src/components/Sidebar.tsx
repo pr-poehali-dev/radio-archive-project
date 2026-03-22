@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
-type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support';
+type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support' | 'profile' | 'admin';
 
 interface NavItem {
   id: Page;
@@ -33,6 +33,8 @@ interface SidebarProps {
   onToggleCollapse: () => void;
   mobileOpen: boolean;
   onMobileClose: () => void;
+  user?: { username: string; role: string; avatar_url?: string | null } | null;
+  onAuthOpen?: () => void;
 }
 
 function NavButton({
@@ -91,6 +93,8 @@ function SidebarContent({
   collapsed,
   onToggleCollapse,
   onClose,
+  user,
+  onAuthOpen,
 }: Omit<SidebarProps, 'mobileOpen' | 'onMobileClose'> & { onClose?: () => void }) {
   const handleNav = (page: Page) => {
     onNavigate(page);
@@ -207,18 +211,52 @@ function SidebarContent({
         </div>
       </nav>
 
-      {/* Footer */}
-      {!collapsed && (
-        <div className="p-3 border-t border-border flex-shrink-0">
-          <p className="text-[10px] text-muted-foreground text-center">🎵 12 ст. · 10 жанров</p>
-        </div>
-      )}
+      {/* User section */}
+      <div className="border-t border-border flex-shrink-0 p-2">
+        {user ? (
+          <>
+            {user.role === 'admin' && (
+              <NavButton
+                item={{ id: 'admin', label: 'Админ панель', icon: 'Shield' }}
+                active={currentPage === 'admin'}
+                collapsed={collapsed}
+                onClick={() => handleNav('admin')}
+              />
+            )}
+            <NavButton
+              item={{ id: 'profile', label: user.username, icon: 'User' }}
+              active={currentPage === 'profile'}
+              collapsed={collapsed}
+              onClick={() => handleNav('profile')}
+              badge={
+                !collapsed && user.avatar_url ? (
+                  <img src={user.avatar_url} alt={user.username} className="ml-auto w-6 h-6 rounded-full object-cover" />
+                ) : undefined
+              }
+            />
+          </>
+        ) : (
+          <button
+            onClick={onAuthOpen}
+            className="w-full flex items-center rounded-xl text-sm transition-all duration-200 text-muted-foreground hover:text-primary hover:bg-primary/10"
+            style={{
+              gap: collapsed ? '0' : '12px',
+              justifyContent: collapsed ? 'center' : 'flex-start',
+              padding: collapsed ? '10px' : '10px 12px',
+            }}
+            title={collapsed ? 'Войти' : undefined}
+          >
+            <Icon name="LogIn" size={18} className="flex-shrink-0" />
+            {!collapsed && <span className="font-medium">Войти</span>}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
 
 export default function Sidebar(props: SidebarProps) {
-  const { mobileOpen, onMobileClose, collapsed } = props;
+  const { mobileOpen, onMobileClose, collapsed, user, onAuthOpen } = props;
 
   // Close on Escape
   useEffect(() => {

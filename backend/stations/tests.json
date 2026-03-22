@@ -1,0 +1,10 @@
+{
+  "tests": [
+    {
+      "name": "Get all stations",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

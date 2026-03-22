@@ -1,6 +1,6 @@
 import Icon from '@/components/ui/icon';
 
-type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support';
+type Page = 'home' | 'stations' | 'genres' | 'favorites' | 'history' | 'stats' | 'about' | 'contacts' | 'support' | 'profile' | 'admin';
 
 const NAV_TABS = [
   { id: 'home' as Page,      icon: 'Radio',    label: 'Главная'  },
