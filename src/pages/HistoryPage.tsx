@@ -19,11 +19,11 @@ function timeAgo(date: Date): string {
 
 export default function HistoryPage({ history, onClear, onPlay }: HistoryPageProps) {
   return (
-    <div className="p-8 animate-fade-in">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 md:p-8 animate-fade-in">
+      <div className="flex items-center justify-between mb-4 md:mb-6">
         <div>
-          <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">История</h2>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">История</h2>
+          <p className="text-muted-foreground text-xs md:text-sm">
             {history.length > 0 ? `${history.length} прослушиваний` : 'История пуста'}
           </p>
         </div>

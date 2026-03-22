@@ -23,15 +23,14 @@ export default function StationsPage({ currentStation, isPlaying, favorites, onP
   });
 
   return (
-    <div className="p-8 animate-fade-in">
-      {/* Header */}
-      <div className="mb-6">
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">Радиостанции</h2>
-        <p className="text-muted-foreground text-sm">{STATIONS.length} станций из разных стран мира</p>
+    <div className="p-4 md:p-8 animate-fade-in">
+      <div className="mb-4 md:mb-6">
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">Радиостанции</h2>
+        <p className="text-muted-foreground text-xs md:text-sm">{STATIONS.length} станций из разных стран мира</p>
       </div>
 
       {/* Search */}
-      <div className="relative mb-5">
+      <div className="relative mb-4">
         <Icon name="Search" size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
@@ -48,7 +47,7 @@ export default function StationsPage({ currentStation, isPlaying, favorites, onP
       </div>
 
       {/* Genre filter */}
-      <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-none">
+      <div className="flex gap-2 overflow-x-auto pb-2 mb-4 md:mb-6" style={{ scrollbarWidth: 'none' }}>
         {GENRES.map(g => (
           <button
             key={g.id}
@@ -66,14 +65,10 @@ export default function StationsPage({ currentStation, isPlaying, favorites, onP
         ))}
       </div>
 
-      {/* Count */}
-      {search || activeGenre !== 'all' ? (
-        <p className="text-xs text-muted-foreground mb-4">
-          Найдено: {filtered.length} станций
-        </p>
-      ) : null}
+      {(search || activeGenre !== 'all') && (
+        <p className="text-xs text-muted-foreground mb-3">Найдено: {filtered.length} станций</p>
+      )}
 
-      {/* Grid */}
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-muted-foreground">
           <Icon name="Radio" size={48} className="mx-auto mb-3 opacity-30" />
@@ -81,7 +76,7 @@ export default function StationsPage({ currentStation, isPlaying, favorites, onP
           <p className="text-xs mt-1">Попробуйте изменить фильтр или поиск</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {filtered.map(station => (
             <StationCard
               key={station.id}

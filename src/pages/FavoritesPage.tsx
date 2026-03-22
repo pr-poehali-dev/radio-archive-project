@@ -12,27 +12,27 @@ interface FavoritesPageProps {
 
 export default function FavoritesPage({ currentStation, isPlaying, favorites, onPlay, onToggleFavorite }: FavoritesPageProps) {
   return (
-    <div className="p-8 animate-fade-in">
-      <div className="mb-6">
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">Избранное</h2>
-        <p className="text-muted-foreground text-sm">
+    <div className="p-4 md:p-8 animate-fade-in">
+      <div className="mb-4 md:mb-6">
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">Избранное</h2>
+        <p className="text-muted-foreground text-xs md:text-sm">
           {favorites.length > 0 ? `${favorites.length} сохранённых станций` : 'Пусто пока'}
         </p>
       </div>
 
       {favorites.length === 0 ? (
         <div
-          className="rounded-3xl p-16 text-center"
+          className="rounded-2xl md:rounded-3xl p-10 md:p-16 text-center"
           style={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))' }}
         >
-          <div className="text-6xl mb-4">💫</div>
-          <h3 className="font-oswald font-semibold text-xl text-foreground mb-2">Добавьте любимые станции</h3>
-          <p className="text-muted-foreground text-sm max-w-xs mx-auto">
+          <div className="text-5xl md:text-6xl mb-3 md:mb-4">💫</div>
+          <h3 className="font-oswald font-semibold text-lg md:text-xl text-foreground mb-2">Добавьте любимые станции</h3>
+          <p className="text-muted-foreground text-xs md:text-sm max-w-xs mx-auto">
             Нажмите на ❤️ в карточке любой станции, чтобы добавить её в избранное
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {favorites.map(station => (
             <StationCard
               key={station.id}

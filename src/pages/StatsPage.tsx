@@ -42,10 +42,10 @@ export default function StatsPage({ history }: StatsPageProps) {
   ];
 
   return (
-    <div className="p-8 animate-fade-in space-y-8">
+    <div className="p-4 md:p-8 animate-fade-in space-y-6 md:space-y-8">
       <div>
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">Статистика</h2>
-        <p className="text-muted-foreground text-sm">Аналитика слушателей и популярность жанров</p>
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">Статистика</h2>
+        <p className="text-muted-foreground text-xs md:text-sm">Аналитика слушателей и популярность жанров</p>
       </div>
 
       {/* My stats */}

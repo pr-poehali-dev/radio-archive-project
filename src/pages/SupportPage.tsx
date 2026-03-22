@@ -30,9 +30,9 @@ export default function SupportPage() {
   ];
 
   return (
-    <div className="p-8 animate-fade-in space-y-8 max-w-2xl">
+    <div className="p-4 md:p-8 animate-fade-in space-y-5 md:space-y-8 max-w-2xl">
       <div>
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">Поддержать проект</h2>
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">Поддержать проект</h2>
         <p className="text-muted-foreground text-sm">Помоги нам развиваться и добавлять новые станции</p>
       </div>
 

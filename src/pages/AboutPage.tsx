@@ -2,10 +2,10 @@ import Icon from '@/components/ui/icon';
 
 export default function AboutPage() {
   return (
-    <div className="p-8 animate-fade-in space-y-8 max-w-2xl">
+    <div className="p-4 md:p-8 animate-fade-in space-y-6 md:space-y-8 max-w-2xl">
       <div>
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">О проекте</h2>
-        <p className="text-muted-foreground text-sm">Всё, что нужно знать о RadioWave</p>
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">О проекте</h2>
+        <p className="text-muted-foreground text-xs md:text-sm">Всё, что нужно знать о RadioWave</p>
       </div>
 
       {/* Main card */}

@@ -2,10 +2,10 @@ import Icon from '@/components/ui/icon';
 
 export default function ContactsPage() {
   return (
-    <div className="p-8 animate-fade-in space-y-8 max-w-2xl">
+    <div className="p-4 md:p-8 animate-fade-in space-y-5 md:space-y-8 max-w-2xl">
       <div>
-        <h2 className="font-oswald font-bold text-2xl text-foreground mb-1">Контакты</h2>
-        <p className="text-muted-foreground text-sm">Есть вопрос или предложение? Напишите нам</p>
+        <h2 className="font-oswald font-bold text-xl md:text-2xl text-foreground mb-1">Контакты</h2>
+        <p className="text-muted-foreground text-xs md:text-sm">Есть вопрос или предложение? Напишите нам</p>
       </div>
 
       <div className="grid gap-4">
